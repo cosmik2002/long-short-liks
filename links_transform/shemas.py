@@ -1,15 +1,15 @@
 from links_transform import ma
-from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
+from links_transform.models import Links
 
 
-class LinksSchema(ma.Schema):
+class LinksSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Links
         load_instance = True
 
-    id = auto_field()
-    long = auto_field()
-    short = auto_field()
-    count = auto_field()
+    id = ma.auto_field()
+    long = ma.auto_field()
+    short = ma.auto_field()
+    count = ma.auto_field()
 
 
