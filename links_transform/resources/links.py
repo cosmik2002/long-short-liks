@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, url_for
 from flask_restful import Resource, abort, marshal_with, fields
 from werkzeug.utils import redirect
 
@@ -18,15 +18,18 @@ class LinksResource(Resource):
             abort(404, message="Link {} doesn't exist".format(short_postfix))
         link.count = link.count + 1
         db.session.commit()
-        return redirect(link.long)
+        return redirect(link.long_url)
 
-    @marshal_with({'short': fields.String})
     def put(self):
         ls = LinksSchema()
+        errors = ls.validate(request.form)
+        if errors:
+            abort(400, message=str(errors))
         link = ls.load(request.form)
         db.session.add(link)
         db.session.flush()
-        link.short = BaseN.DecToBaseN(link.id, self.digit_set)
+        link.short_postfix = BaseN.DecToBaseN(link.id, self.digit_set)
         db.session.commit()
-        return link
+        short_link = url_for("linksresource", short_postfix=link.short_postfix, _external=True)
+        return short_link
 
