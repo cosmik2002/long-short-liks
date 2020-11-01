@@ -8,7 +8,6 @@ from config import Config
 
 db = SQLAlchemy()
 ma = Marshmallow()
-api = Api(prefix='/api')
 migrate = Migrate()
 
 
@@ -20,6 +19,7 @@ def create_app(config_class=Config):
     ma.init_app(app)
     from links_transform.resources.links import LinksResource
     from links_transform.resources.links_stat import LinksStat
+    api = Api(prefix='/api')
     api.add_resource(LinksResource, '/long_to_short',
                      '/<short_postfix>')
     api.add_resource(LinksStat, '/statistic/<short_postfix>')

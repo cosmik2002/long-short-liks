@@ -31,5 +31,5 @@ class LinksResource(Resource):
         link.short_postfix = BaseN.DecToBaseN(link.id, self.digit_set)
         db.session.commit()
         short_link = url_for("linksresource", short_postfix=link.short_postfix, _external=True)
-        return short_link
+        return {"short_link":short_link}
 
