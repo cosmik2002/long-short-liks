@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   links:
-    build: ./docker
+    build: .
     env_file: docker/.env
     container_name: links
     ports:
@@ -11,6 +11,8 @@ services:
 
   postgres:
     image: postgres:9.5-alpine
+    volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
     ports:
       - 5454:5432
     env_file: docker/.env

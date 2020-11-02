@@ -7,8 +7,9 @@ class Links(db.Model):
     long_url = db.Column(db.String(200))
     count = db.Column(db.Integer)
 
-    def __init__(self, long_url=None):
+    def __init__(self, long_url=None, short_postfix=None, id=None):
         self.long_url = long_url
+        self.short_postfix = short_postfix
         self.count = 0
 
     def __repr__(self):

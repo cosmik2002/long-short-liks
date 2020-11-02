@@ -11,15 +11,14 @@ ma = Marshmallow()
 migrate = Migrate()
 
 
-
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     db.init_app(app)
     ma.init_app(app)
+    api = Api(app, prefix='/api')
     from links_transform.resources.links import LinksResource
     from links_transform.resources.links_stat import LinksStat
-    api = Api(prefix='/api')
     api.add_resource(LinksResource, '/long_to_short',
                      '/<short_postfix>')
     api.add_resource(LinksStat, '/statistic/<short_postfix>')

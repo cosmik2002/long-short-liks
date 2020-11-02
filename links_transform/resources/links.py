@@ -1,3 +1,5 @@
+from re import match
+
 from flask import request, url_for
 from flask_restful import Resource, abort, marshal_with, fields
 from werkzeug.utils import redirect
@@ -8,13 +10,14 @@ from links_transform.shemas import LinksSchema
 
 
 class LinksResource(Resource):
-    def __init__(self):
-        self.digit_set = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def get(self, short_postfix):
-        id = BaseN.BaseNToDec(short_postfix, self.digit_set)
-        link = Links.query.get(id)
-        if not link:
+        ls = LinksSchema()
+        errors = ls.validate({"short_postfix":short_postfix})
+        if errors:
+            abort(400, message=str(errors))
+        link = ls.load({"short_postfix":short_postfix})
+        if not link.long_url:
             abort(404, message="Link {} doesn't exist".format(short_postfix))
         link.count = link.count + 1
         db.session.commit()
@@ -28,8 +31,8 @@ class LinksResource(Resource):
         link = ls.load(request.form)
         db.session.add(link)
         db.session.flush()
-        link.short_postfix = BaseN.DecToBaseN(link.id, self.digit_set)
+        dump = ls.dump(link)
         db.session.commit()
-        short_link = url_for("linksresource", short_postfix=link.short_postfix, _external=True)
+        short_link = dump['short_link']
         return {"short_link":short_link}
 
