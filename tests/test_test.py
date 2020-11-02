@@ -1,4 +1,5 @@
 import pytest
+from urllib.parse import urlparse
 from flask import url_for, request
 
 TEST_URL = "http://ya.ru"
@@ -22,6 +23,17 @@ class TestSuite:
         resp = self.client.get(resp.json['short_link'])
         assert resp.status_code == 302
         assert resp.headers['Location'] == TEST_URL
+
+    def test_link_stat(self):
+        url = url_for('linksresource')
+        resp = self.client.put(url, data={"long_url":TEST_URL})
+        short_postfix = resp.json['short_link'].split('/')[-1]
+        short_link = resp.json['short_link']
+        resp = self.client.get(url_for('linksstat', short_postfix=short_postfix))
+        assert resp.json['count'] == 0
+        resp = self.client.get(short_link)
+        resp = self.client.get(url_for('linksstat', short_postfix=short_postfix))
+        assert resp.json['count'] == 1
 
     def test_malformed_url(self):
         url = url_for('linksresource')
