@@ -1,0 +1,80 @@
+---
+swagger: 2.0
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: short_long_links
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /myself5441/long_short_links/1.0.0
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: users
+  description: Operations available to regular users
+schemes:
+- https
+- http
+paths:
+  /api/{short_postfix}:
+    get:
+      tags:
+      - users
+      summary: redirect to long link
+      description: search long link and redirect
+      produces:
+      - redirect
+      parameters:
+      - name: short_postfix
+        in: path
+        description: short_postfix for long link
+        required: true
+        type: string
+      responses:
+        "302":
+          description: redirect to long link
+        "400":
+          description: bad input parameter
+        "404":
+          description: missed short_postfix
+  /api/long_to_short:
+    put:
+      tags:
+      - users
+      summary: shotter link, return short link
+      description: shotter link, return short link
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: long_url
+        in: formData
+        description: long link
+        required: false
+        type: string
+      responses:
+        "400":
+          description: invalid input, object invalid
+  /api/statistic/{short_postfix}:
+    get:
+      tags:
+      - users
+      summary: statistic to short link
+      produces:
+      - application/json
+      parameters:
+      - name: short_postfix
+        in: path
+        description: short_postfix for long link
+        required: true
+        type: string
+      responses:
+        "400":
+          description: bad input parameter
+        "404":
+          description: missed short_postfix
