@@ -1,7 +1,5 @@
 from flask_restful import Resource, abort, marshal_with, fields
 
-from links_transform import BaseN
-from links_transform.models import Links
 from links_transform.shemas import LinksSchema
 
 

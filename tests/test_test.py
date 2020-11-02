@@ -1,6 +1,5 @@
 import pytest
-from urllib.parse import urlparse
-from flask import url_for, request
+from flask import url_for
 
 TEST_URL = "http://ya.ru"
 TEST_MALFORMED_URL = "delete * from links"
